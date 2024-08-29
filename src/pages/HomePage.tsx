@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import BoardItem from "src/components/BoardItem.tsx";
+import { Link, Outlet } from "react-router-dom";
+import { getBoards } from "src/api/board";
 import { useAuth } from "src/contexts/AuthContext";
+import { BoardSummaryDto } from "src/types";
 
 const HomePage = () => {
   const [isLogin, setIsLogin] = useState(false);
+  const [boards, setBoards] = useState([]);
+  const [boardCount, setBoardCount] = useState(0);
   const { token, logout } = useAuth();
 
   const handleLogout = (event: React.FormEvent) => {
@@ -23,16 +26,23 @@ const HomePage = () => {
     }
   }, [token]);
 
+  useEffect(() => {
+    const fetchBoards = async () => {
+      try {
+        const data = await getBoards();
+        setBoards(data.list);
+        setBoardCount(data.count);
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      }
+    };
+    fetchBoards();
+  }, []);
+
   return (
     <div>
       <h1>HomePage</h1>
-      <button
-        onClick={() => {
-          setIsLogin(!isLogin);
-        }}
-      >
-        로그인 여부: {isLogin ? "로그인 됨" : "로그인 안 됨"}
-      </button>
+      <button>로그인 여부: {isLogin ? "로그인 됨" : "로그인 안 됨"}</button>
       <br />
 
       {isLogin ? (
@@ -71,16 +81,27 @@ const HomePage = () => {
       )}
 
       <div>
-        <h3>전체 글 목록</h3>
-        <Link to={`/post-detail/firstItem`}>
-          <BoardItem id={"firstItem"}>1번 아이템</BoardItem>
-        </Link>
-        <Link to={`/post-detail/secondItem`}>
-          <BoardItem id={"secondItem"}>2번 아이템</BoardItem>
-        </Link>
-        <Link to={`/post-detail/thirdItem`}>
-          <BoardItem id={"thirdItem"}>3번 아이템</BoardItem>
-        </Link>
+        <nav>
+          {boardCount === 0 ? (
+            <ul>
+              <Link to={`/boards/all`}>
+                <li>전체 게시판</li>
+              </Link>
+            </ul>
+          ) : (
+            <ul>
+              <Link to={`/boards/all`}>
+                <li>전체 게시판</li>
+              </Link>
+              {boards.map((board: BoardSummaryDto) => (
+                <Link to={`/boards/${board.id}`} key={board.id}>
+                  <li>{board.title}</li>
+                </Link>
+              ))}
+            </ul>
+          )}
+        </nav>
+        <Outlet />
       </div>
     </div>
   );

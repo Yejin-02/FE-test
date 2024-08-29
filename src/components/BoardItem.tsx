@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const BoardItem = styled.button`
+const BoardItem = styled.div`
   background-color: beige;
   text-decoration: none;
 

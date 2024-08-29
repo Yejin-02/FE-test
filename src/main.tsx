@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import queryClient from "./api/queryClient";
 import { AuthProvider } from "./contexts/AuthContext.tsx";
+import Board from "./pages/Board.tsx";
 import CreatePostPage from "./pages/CreatePostPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
@@ -19,6 +20,12 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
+    children: [
+      {
+        path: "boards/:boardUuid",
+        element: <Board />,
+      },
+    ],
   },
   {
     path: "/create-post",

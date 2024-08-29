@@ -23,7 +23,6 @@ const ProfilePage = () => {
       <h1>Profile</h1>
       <div>
         <h3>내 프로필</h3>
-        <p>{token}</p>
         <Link to="/user-settings">
           <button>비밀번호 변경</button>
         </Link>
