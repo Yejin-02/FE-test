@@ -1,11 +1,9 @@
 import { useState } from "react";
 
 const SettingsPage = () => {
-  const [userID, setUserID] = useState("userID");
   const [userPW, setUserPW] = useState("userPW");
-  const [userPWcheck, setUserPWcheck] = useState("userPWcheck");
-  const [userName, setUserName] = useState("userName");
-  const [userEmail, setUserEmail] = useState("userEmail");
+  const [newUserPW, setNewUserPW] = useState("");
+  const [userPWcheck, setUserPWcheck] = useState("");
 
   return (
     <div>
@@ -17,49 +15,29 @@ const SettingsPage = () => {
           }}
           style={{ display: "flex", flexDirection: "column", width: "300px" }}
         >
-          <h3>계정 설정</h3>
-          ID
-          <input
-            type="text"
-            value={userID}
-            onChange={(e) => setUserID(e.target.value)}
-            placeholder={userID}
-            required
-            style={{ marginBottom: "20px" }}
-          />
-          비밀번호
+          <h3>비밀번호 변경</h3>
+          기존 비밀번호
           <input
             type="password"
-            value={userPW}
             onChange={(e) => setUserPW(e.target.value)}
-            placeholder={userPW}
             required
             style={{ marginBottom: "20px" }}
           />
-          비밀번호 확인
+          새 비밀번호
+          <input
+            type="password"
+            value={newUserPW}
+            onChange={(e) => setNewUserPW(e.target.value)}
+            placeholder="새 비밀번호"
+            required
+            style={{ marginBottom: "20px" }}
+          />
+          새 비밀번호 확인
           <input
             type="password"
             value={userPWcheck}
             onChange={(e) => setUserPWcheck(e.target.value)}
-            placeholder={userPWcheck}
-            required
-            style={{ marginBottom: "20px" }}
-          />
-          이름
-          <input
-            type="text"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            placeholder={userName}
-            required
-            style={{ marginBottom: "20px" }}
-          />
-          Email
-          <input
-            type="text"
-            value={userEmail}
-            onChange={(e) => setUserEmail(e.target.value)}
-            placeholder={userEmail}
+            placeholder="새 비밀번호 확인"
             required
             style={{ marginBottom: "20px" }}
           />

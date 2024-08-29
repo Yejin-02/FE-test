@@ -2,15 +2,18 @@ import "./locales/index.ts";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { QueryClientProvider } from "react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import queryClient from "./api/queryClient";
+import { AuthProvider } from "./contexts/AuthContext.tsx";
 import CreatePostPage from "./pages/CreatePostPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import PostDetail from "./pages/PostDetail.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
+import RegisterPage from "./pages/RegisterPage.tsx";
 import SettingsPage from "./pages/SettingsPage.tsx";
-import SignUpPage from "./pages/SignUpPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +26,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/sign-up",
-    element: <SignUpPage />,
+    element: <RegisterPage />,
   },
   {
     path: "/login",
@@ -45,6 +48,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
 );

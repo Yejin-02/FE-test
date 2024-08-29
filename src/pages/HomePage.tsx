@@ -1,9 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BoardItem from "src/components/BoardItem.tsx";
+import { useAuth } from "src/contexts/AuthContext";
 
 const HomePage = () => {
   const [isLogin, setIsLogin] = useState(false);
+  const { token, logout } = useAuth();
+
+  const handleLogout = (event: React.FormEvent) => {
+    event.preventDefault();
+    const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
+    if (confirmLogout) {
+      logout();
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [token]);
 
   return (
     <div>
@@ -13,8 +31,7 @@ const HomePage = () => {
           setIsLogin(!isLogin);
         }}
       >
-        클릭하여 로그인 여부 변경. 현재 상태는{" "}
-        {isLogin ? "로그인 됨" : "로그인 안 됨"}
+        로그인 여부: {isLogin ? "로그인 됨" : "로그인 안 됨"}
       </button>
       <br />
 
@@ -33,6 +50,7 @@ const HomePage = () => {
           <Link to={"/profile"}>
             <button>프로필 보기</button>
           </Link>
+          <button onClick={handleLogout}>로그아웃</button>
         </div>
       ) : (
         <div
