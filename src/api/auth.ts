@@ -1,4 +1,4 @@
-import apiClient from "./axiosInstance";
+import { apiClient } from "./axiosInstance";
 
 // 로그인 버튼
 export const login = async (email: string, password: string) => {

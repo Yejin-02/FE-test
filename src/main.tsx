@@ -9,6 +9,7 @@ import queryClient from "./api/queryClient";
 import { AuthProvider } from "./contexts/AuthContext.tsx";
 import Board from "./pages/Board.tsx";
 import CreatePostPage from "./pages/CreatePostPage.tsx";
+import DefaultBoard from "./pages/DefaultBoard.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import PostDetail from "./pages/PostDetail.tsx";
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <HomePage />,
     children: [
+      {
+        path: "",
+        element: <DefaultBoard />,
+      },
       {
         path: "boards/:boardUuid",
         element: <Board />,

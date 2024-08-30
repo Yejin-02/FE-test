@@ -1,26 +1,25 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { getPostsByBoard } from "src/api/posts";
+import { Link } from "react-router-dom";
+import { getAllPosts } from "src/api/posts";
 import BoardItem from "src/components/BoardItem";
 import { PostDto } from "src/types";
 
-const Board = () => {
-  const { boardUuid } = useParams<{ boardUuid: string }>();
+const DefaultBoard = () => {
   const [posts, setPosts] = useState([]);
   const [postCount, setPostCount] = useState(0);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const data = await getPostsByBoard(boardUuid as string);
+        const data = await getAllPosts();
         setPosts(data.list);
         setPostCount(data.count);
       } catch (error) {
-        console.error("Failed to fetch posts by board:", error);
+        console.error("Failed to fetch posts:", error);
       }
     };
     fetchPosts();
-  }, [boardUuid]);
+  }, []);
 
   return (
     <div>
@@ -41,4 +40,4 @@ const Board = () => {
   );
 };
 
-export default Board;
+export default DefaultBoard;

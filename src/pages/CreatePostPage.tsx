@@ -1,10 +1,23 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { createPost } from "src/api/posts";
 
 function CreatePostPage() {
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
-  const [postCreator, setPostCreator] = useState("생각해보니까 이건 변경 필요한 값이 아님");
+  const boardUuid = "265f245a-8a6e-4278-9af8-2935b3e8e153";
+
+  const handleCreatePost = async (
+    postTitle: string,
+    postBody: string,
+    boardUuid: string,
+  ) => {
+    try {
+      const response = await createPost(boardUuid);
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+    }
+  };
 
   return (
     <div>
@@ -27,7 +40,13 @@ function CreatePostPage() {
         ></textarea>
       </div>
       <button>이미지 첨부</button>
-      <button>발행</button>
+      <button
+        onClick={() => {
+          handleCreatePost(postTitle, postBody, boardUuid);
+        }}
+      >
+        발행
+      </button>
     </div>
   );
 }

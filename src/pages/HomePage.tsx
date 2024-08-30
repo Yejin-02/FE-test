@@ -84,13 +84,13 @@ const HomePage = () => {
         <nav>
           {boardCount === 0 ? (
             <ul>
-              <Link to={`/boards/all`}>
+              <Link to={`/`}>
                 <li>전체 게시판</li>
               </Link>
             </ul>
           ) : (
             <ul>
-              <Link to={`/boards/all`}>
+              <Link to={`/`}>
                 <li>전체 게시판</li>
               </Link>
               {boards.map((board: BoardSummaryDto) => (
