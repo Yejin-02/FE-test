@@ -12,11 +12,14 @@ export const getPostsByBoard = async (boardUuid: string) => {
   return response.data;
 };
 
-// 게시글 쓰기 <-- 수정필요
-export const createPost = async (boardUuid: string) => {
+// 게시글 쓰기
+export const createPost = async (
+  boardUuid: string,
+  postData: { title: string; body: string },
+) => {
   const response = await authApiClient.post(
     `/posts?boardUuid=${boardUuid}`,
-    {},
+    postData, // 전달할 데이터를 여기에 포함
   );
   return response.data;
 };
@@ -27,9 +30,9 @@ export const getPostById = async (id: string) => {
   return response.data;
 };
 
-// 단일 게시글 삭제하기 <-- 수정필요
+// 단일 게시글 삭제하기
 export const deletePostById = async (id: string) => {
-  const response = await apiClient.delete(`/posts/${id}`);
+  const response = await authApiClient.delete(`/posts/${id}`);
   return response.data;
 };
 
@@ -60,7 +63,6 @@ export const searchPostByKeyword = async (keyword: string) => {
   curl -X 'GET' \
   'https://api.2024.newbies.gistory.me/posts/search?keyword=%EC%A0%9C%EB%AA%A9' \
   -H 'accept: application/json' <- 이렇게 뜨는 이유 뭐지?
-
-  제목 -> %EC%A0%9C%EB%AA%A9 변환은 어디서 어떤 로직으로 일어나는 거지?
+  제목 -> %EC%A0%9C%EB%AA%A9 변환은 알아서 일어나는 거겠죠?
    */
 };

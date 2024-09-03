@@ -14,6 +14,7 @@ const LoginPage = () => {
   const mutation = useMutation(() => login(userEmail, userPW), {
     onSuccess: (data) => {
       setToken(data.accessToken);
+      localStorage.setItem("accessToken", data.accessToken)
       localStorage.setItem("refreshToken", data.refreshToken);
       navigate("/"); // 로그인 후 홈으로 이동
     },

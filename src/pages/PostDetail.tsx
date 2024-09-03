@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { getPostById } from "src/api/posts";
+import { deletePostById, getPostById } from "src/api/posts";
 
 import { PostDto } from "../types";
 
@@ -24,15 +24,31 @@ const PostDetail = () => {
     fetchPost();
   }, [id]);
 
+  const handleDelete = async () => {
+    if (post?.id) {
+      try {
+        await deletePostById(post.id);
+        alert("게시글이 삭제되었습니다.");
+        window.location.href = "/"; // 홈 화면으로 리디렉션
+      } catch (error) {
+        console.error("게시글 삭제 실패:", error);
+        alert("게시글 삭제에 실패했습니다.");
+      }
+    } else {
+      alert("게시글 ID가 없습니다.");
+    }
+  };
+
   return (
     <div>
       <h1>Post Detail</h1>
       <Link to="/">
         <button>뒤로 가기</button>
       </Link>
-      <p>{post?.title}</p>
-      <p>{post?.body}</p>
-      <button>삭제하기</button>
+      <p>제목: {post?.title}</p>
+      <p>내용: {post?.body}</p>
+      <div>태그: {post?.tags?.join(", ")}</div>
+      <button onClick={handleDelete}>삭제하기</button>
     </div>
   );
 };

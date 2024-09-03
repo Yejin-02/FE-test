@@ -25,12 +25,24 @@ export const authApiClient = axios.create({
 const onAxiosRequest = async (
   config: InternalAxiosRequestConfig,
 ): Promise<InternalAxiosRequestConfig> => {
-  const accessToken = localStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("accessToken");
+  alert(accessToken);
 
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   } else {
-    // refresh();
+    try {
+      const refreshResponse = await refresh("refreshToken");
+      const newAccessToken = refreshResponse.resultData?.accessToken;
+
+      if (newAccessToken) {
+        localStorage.setItem("access_token", newAccessToken);
+        config.headers.Authorization = `Bearer ${newAccessToken}`;
+      }
+    } catch (error) {
+      console.error("Failed to refresh token:", error);
+      // 필요시 로그인 페이지로 리다이렉션 window.location.href = "/login";
+    }
   }
 
   return config;
