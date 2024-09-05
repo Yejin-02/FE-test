@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { deletePostById, getPostById } from "src/api/posts";
 
-import { PostDto } from "../types";
+import { ImageDto, PostDto } from "../types";
 
 const PostDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -45,8 +45,24 @@ const PostDetail = () => {
       <Link to="/">
         <button>뒤로 가기</button>
       </Link>
+      <p>게시판: {post?.board.title}</p>
       <p>제목: {post?.title}</p>
       <p>내용: {post?.body}</p>
+      <p>아이디: {post?.id}</p>
+      <p>
+        {post?.images.map((image: ImageDto) => {
+          return (
+            <div key={image.id}>
+              <img
+                id={image.id}
+                alt="image"
+                src={`data:image/png;base64,${image.image}`}
+              />
+              <p>image id: {image.id}</p>
+            </div>
+          );
+        })}
+      </p>
       <div>태그: {post?.tags?.join(", ")}</div>
       <button onClick={handleDelete}>삭제하기</button>
     </div>

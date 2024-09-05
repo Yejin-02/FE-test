@@ -1,9 +1,3 @@
-interface UserDto {
-  id: string;
-  nickname: string;
-  createdAt: string;
-}
-
 export interface BoardSummaryDto {
   id: string;
   title: string;
@@ -11,7 +5,7 @@ export interface BoardSummaryDto {
   creator: UserDto;
 }
 
-interface ImageDto {
+export interface ImageDto {
   image: string;
   id: string;
 }
@@ -25,4 +19,10 @@ export interface PostDto {
   createdAt: string;
   createdBy: UserDto;
   images: ImageDto[];
+}
+
+interface UserDto {
+  id: string;
+  nickname: string;
+  createdAt: string;
 }

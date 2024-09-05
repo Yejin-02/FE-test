@@ -30,7 +30,9 @@ const DefaultBoard = () => {
           {posts.map((post: PostDto) => (
             <Link to={`/post-detail/${post.id}`} key={post.id}>
               <BoardItem>
-                <li>{post.title}</li>
+                <li>
+                  {post.title} - {post.createdBy.nickname}
+                </li>
               </BoardItem>
             </Link>
           ))}

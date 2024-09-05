@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { createBoard, getBoards, deleteBoardById } from "src/api/board";
+import { createBoard, deleteBoardById, getBoards } from "src/api/board";
 import { useAuth } from "src/contexts/AuthContext";
 import { BoardSummaryDto } from "src/types";
 
@@ -30,10 +30,11 @@ const HomePage = () => {
     }
   };
 
-  const handleDeleteBoard = async (boardId:string) => {
+  const handleDeleteBoard = async (boardId: string) => {
     try {
       await deleteBoardById(boardId);
       alert("게시판이 삭제되었습니다");
+      window.location.href = "/"; // 홈 화면으로 리디렉션
     } catch (error) {
       console.error("게시판 삭제에 실패:", error);
       alert("게시판 삭제에 실패했습니다");
@@ -64,9 +65,6 @@ const HomePage = () => {
   return (
     <div>
       <h1>HomePage</h1>
-      <button>로그인 여부: {isLogin ? "로그인 됨" : "로그인 안 됨"}</button>
-      <br />
-
       {isLogin ? (
         <div
           style={{

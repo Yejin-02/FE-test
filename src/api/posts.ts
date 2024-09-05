@@ -1,3 +1,5 @@
+import { ImageDto } from "src/types";
+
 import { apiClient, authApiClient } from "./axiosInstance";
 
 // 모든 게시글 목록 불러오기
@@ -12,7 +14,13 @@ export const getPostsByBoard = async (boardUuid: string) => {
   return response.data;
 };
 
-// 게시글 쓰기
+// 특정 태그가 달린 게시글 불러오기
+export const getPostsByTag = async (tag: string) => {
+  const response = await apiClient.get(`/posts?tag=${tag}`, {});
+  return response.data;
+};
+
+// 게시글 쓰기 <-- 수정필요: 태그 처리부 필요
 export const createPost = async (
   boardUuid: string,
   postData: { title: string; body: string },
@@ -36,16 +44,64 @@ export const deletePostById = async (id: string) => {
   return response.data;
 };
 
-// 단일 게시글 수정하기 <-- 수정피룡
+// 단일 게시글 수정하기 <-- 수정필요
 export const patchPostById = async (id: string) => {
   const response = await apiClient.patch(`/posts/${id}`);
   return response.data;
 };
 
 // 단일 게시글 이미지 첨부 <-- 수정필요
-export const addImageOfPost = async (id: string) => {
-  const response = await authApiClient.post(`/posts/${id}/image`);
-  return response.data;
+export const uploadImageToPost = async (postId: string, imageFile: File) => {
+  const reader = new FileReader();
+
+  return new Promise((resolve, reject) => {
+    reader.onloadend = async () => {
+      const base64String = reader.result as string;
+
+      try {
+        const response = await authApiClient.post(`/posts/${postId}/image`, {
+          image: base64String,
+        });
+        resolve(response.data.imageUrl); // 서버가 반환하는 이미지 URL
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        reject(error);
+      }
+    };
+
+    reader.onerror = (error) => {
+      console.error("Error reading file:", error);
+      reject(error);
+    };
+
+    reader.readAsDataURL(imageFile); // 이미지를 Base64로 변환
+  });
+};
+
+export const addImagesToPost = async (postId: string, imageFiles: File[]) => {
+  try {
+    const imageDtos: ImageDto[] = await Promise.all(
+      imageFiles.map(async (file) => {
+        const imageUrl = await uploadImageToPost(postId, file);
+        return {
+          id: crypto.randomUUID(), // 고유한 ID 생성
+          image: imageUrl,
+        };
+      }),
+    );
+
+    // 이미지를 포함한 새로운 postDto 생성
+    const updatedPostDto = {
+      ...postDto,
+      images: [...postDto.images, ...imageDtos],
+    };
+
+    // 여기서 postDto를 갱신할 필요가 없다면, 이미지만 업데이트하는 것에 그칠 수 있음.
+    return updatedPostDto;
+  } catch (error) {
+    console.error("Failed to add images to post:", error);
+    throw error;
+  }
 };
 
 // 단일 게시글 이미지 삭제 <-- 수정필요

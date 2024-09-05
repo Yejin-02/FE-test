@@ -18,12 +18,15 @@ const ProfilePage = () => {
     }
   }, [navigate, token]);
 
+  const refreshToken = localStorage.getItem("refreshToken");
+
   return (
     <div>
       <h1>Profile</h1>
       <div>
         <h3>내 프로필</h3>
-        {token}
+        <p>{token}</p>
+        <p>{refreshToken}</p>
         <br />
         <Link to="/user-settings">
           <button>비밀번호 변경</button>

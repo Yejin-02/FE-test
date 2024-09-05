@@ -22,12 +22,13 @@ export const register = async (
 
 // 인증 토큰 갱신
 export const refresh = async (refreshToken: string) => {
-  const response = await apiClient.post(
-    "/auth/refresh",
-    {},
-    {
-      headers: { Authorization: `Bearer ${refreshToken}` },
-    },
-  );
-  return response.data;
+  try {
+    const response = await apiClient.post("/auth/refresh", {
+      refreshToken,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to refresh token:", error);
+    throw error;
+  }
 };
