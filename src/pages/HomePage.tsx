@@ -119,6 +119,7 @@ const HomePage = () => {
       )}
 
       <div>
+        <Link to="/search">제목으로 검색하러 가기</Link>
         <nav>
           {boardCount === 0 ? (
             <ul>

@@ -1,37 +1,23 @@
 import { useState } from "react";
-import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { getAllPosts, searchPostByKeyword } from "src/api/posts";
+import { searchPostByKeyword } from "src/api/posts";
 import BoardItem from "src/components/BoardItem";
 import { PostDto } from "src/types";
 
 const DefaultBoard = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [posts, setPosts] = useState([]);
+  const [postCount, setPostCount] = useState(0);
 
-  const {
-    data: postsData,
-    error: postsError,
-    isLoading: postsLoading,
-  } = useQuery(["posts"], getAllPosts);
-
-  if (postsLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (postsError) {
-    console.error("Failed to fetch posts:", postsError);
-    return <div>Error fetching data</div>;
-  }
-
-  const posts = postsData.list;
-  const postCount = postsData.count;
-
-  const handleSearchPost = async (keyword: string) => {
+  const handleSearch = async (keyword: string) => {
     const response = await searchPostByKeyword(keyword);
+    setPosts(response.list);
+    setPostCount(response.count);
   };
 
   return (
     <div>
+      <Link to="/">홈으로 돌아가기</Link>
       <div className="searchPostByTitle">
         <input
           type="text"
@@ -42,14 +28,14 @@ const DefaultBoard = () => {
         ></input>
         <button
           onClick={() => {
-            handleSearchPost(searchKeyword);
+            handleSearch(searchKeyword);
           }}
         >
           검색
         </button>
       </div>
       {postCount === 0 ? (
-        <p>No posts available.</p>
+        <p>검색 결과 없음</p>
       ) : (
         <ul>
           {posts.map((post: PostDto) => (

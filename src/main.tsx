@@ -15,6 +15,7 @@ import LoginPage from "./pages/LoginPage.tsx";
 import PostDetail from "./pages/PostDetail.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
+import SearchBoard from "./pages/SearchBoard.tsx";
 import SettingsPage from "./pages/SettingsPage.tsx";
 import TagBoard from "./pages/TagBoard.tsx";
 
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
   {
     path: "/user-settings",
     element: <SettingsPage />,
+  },
+  {
+    path: "/search",
+    element: <SearchBoard />,
   },
 ]);
 

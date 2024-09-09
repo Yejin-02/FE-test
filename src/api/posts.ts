@@ -18,7 +18,7 @@ export const getPostsByTag = async (tag: string) => {
   return response.data;
 };
 
-// 게시글 쓰기 <-- 수정필요: 태그 처리부 필요
+// 게시글 쓰기
 export const createPost = async (
   boardUuid: string,
   postData: { title: string; body: string; tags: string[] },
@@ -26,7 +26,6 @@ export const createPost = async (
   const response = await authApiClient.post(
     `/posts?boardUuid=${boardUuid}`,
     postData,
-    // 전달할 데이터를 여기에 포함
   );
   return response.data;
 };
@@ -37,10 +36,28 @@ export const getPostById = async (id: string) => {
   return response.data;
 };
 
-// 단일 게시글 삭제하기 <-- 수정필요. 이미지 첨부된 것들은 이미지 따로 삭제해 줘야하는 듯?
-export const deletePostById = async (id: string) => {
-  const response = await authApiClient.delete(`/posts/${id}`);
-  return response.data;
+// 단일 게시글 삭제하기
+export const deletePostById = async (postId: string) => {
+  try {
+    // 게시글 정보 가져오기
+    const postResponse = await authApiClient.get(`/posts/${postId}`);
+    const images = postResponse.data.images;
+
+    // 이미지가 있는 경우, 이미지 삭제
+    if (images && images.length > 0) {
+      for (const image of images) {
+        await deleteImageOfPost(postId, image.id);
+        console.log(`Image with id ${image.id} deleted successfully.`);
+      }
+    }
+
+    const deletePostResponse = await authApiClient.delete(`/posts/${postId}`);
+    console.log(`Post with id ${postId} deleted successfully.`);
+    return deletePostResponse.data;
+  } catch (error) {
+    console.error(`Error deleting post with id ${postId}:`, error);
+    throw error;
+  }
 };
 
 // 단일 게시글 수정하기 <-- 수정필요. 우선 PostDetail에 수정 버튼부터 만들고 거따 붙이자.
@@ -75,7 +92,7 @@ export const uploadImageToPost = async (
   }
 };
 
-// 단일 게시글 이미지 삭제 <-- 수정필요
+// 단일 게시글 이미지 삭제
 export const deleteImageOfPost = async (id: string, imageId: string) => {
   const response = await authApiClient.delete(`/posts/${id}/image/${imageId}`);
   return response.data;
@@ -85,6 +102,7 @@ export const deleteImageOfPost = async (id: string, imageId: string) => {
 export const searchPostByKeyword = async (keyword: string) => {
   const response = await apiClient.get(`/posts/search?keyword=${keyword}`);
   return response.data;
+
   /*
   keyword: 제목 <- 이렇게 보냈는데
   curl -X 'GET' \

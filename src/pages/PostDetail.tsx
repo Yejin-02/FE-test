@@ -26,18 +26,27 @@ const PostDetail = () => {
 
   const handleDelete = async () => {
     if (post?.id) {
-      try {
-        await deletePostById(post.id);
-        alert("게시글이 삭제되었습니다.");
-        window.location.href = "/"; // 홈 화면으로 리디렉션
-      } catch (error) {
-        console.error("게시글 삭제 실패:", error);
-        alert("게시글 삭제에 실패했습니다.");
+      const isConfirmed = window.confirm(
+        "정말로 이 게시글을 삭제하시겠습니까?",
+      );
+      if (isConfirmed) {
+        try {
+          await deletePostById(post.id);
+          alert("게시글이 삭제되었습니다.");
+          window.location.href = "/"; // 홈 화면으로 리디렉션
+        } catch (error) {
+          console.error("게시글 삭제 실패:", error);
+          alert("게시글 삭제에 실패했습니다.");
+        }
+      } else {
+        alert("게시글 삭제가 취소되었습니다.");
       }
     } else {
       alert("게시글 ID가 없습니다.");
     }
   };
+
+  const handlePatch = () => {};
 
   return (
     <div>
@@ -74,6 +83,7 @@ const PostDetail = () => {
         ))}
       </div>
       <button onClick={handleDelete}>삭제하기</button>
+      <button onClick={handlePatch}>수정하기..는 아직 미완성</button>
     </div>
   );
 };
