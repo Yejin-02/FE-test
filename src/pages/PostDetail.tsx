@@ -63,7 +63,16 @@ const PostDetail = () => {
           );
         })}
       </p>
-      <div>태그: {post?.tags?.join(", ")}</div>
+      <div>
+        태그:{" "}
+        {post?.tags?.map((tag) => (
+          <>
+            <Link to={`/tags/${tag}`} key={tag}>
+              <li>{tag}</li>
+            </Link>
+          </>
+        ))}
+      </div>
       <button onClick={handleDelete}>삭제하기</button>
     </div>
   );

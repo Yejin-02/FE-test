@@ -1,9 +1,9 @@
-export type TagDto = {
-  key: string;
-};
-
 export type AddImageProps = {
   postID: string | undefined;
+};
+
+export type TagDto = {
+  key: string;
 };
 
 export interface BoardSummaryDto {
@@ -33,4 +33,9 @@ interface UserDto {
   id: string;
   nickname: string;
   createdAt: string;
+}
+
+export interface TagListDto {
+  count: BigInteger;
+  list: TagDto;
 }
