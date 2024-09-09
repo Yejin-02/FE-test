@@ -1,6 +1,3 @@
-import { title } from "process";
-import { AddImageProps, ImageDto } from "src/types";
-
 import { apiClient, authApiClient } from "./axiosInstance";
 
 // 모든 게시글 목록 불러오기
@@ -40,13 +37,13 @@ export const getPostById = async (id: string) => {
   return response.data;
 };
 
-// 단일 게시글 삭제하기
+// 단일 게시글 삭제하기 <-- 수정필요. 이미지 첨부된 것들은 이미지 따로 삭제해 줘야하는 듯?
 export const deletePostById = async (id: string) => {
   const response = await authApiClient.delete(`/posts/${id}`);
   return response.data;
 };
 
-// 단일 게시글 수정하기 <-- 수정필요
+// 단일 게시글 수정하기 <-- 수정필요. 우선 PostDetail에 수정 버튼부터 만들고 거따 붙이자.
 export const patchPostById = async (id: string) => {
   const response = await apiClient.patch(`/posts/${id}`);
   return response.data;
@@ -84,7 +81,7 @@ export const deleteImageOfPost = async (id: string, imageId: string) => {
   return response.data;
 };
 
-// 게시글 검색 결과 <--수정필요
+// 게시글 검색 결과 <-- 수정필요
 export const searchPostByKeyword = async (keyword: string) => {
   const response = await apiClient.get(`/posts/search?keyword=${keyword}`);
   return response.data;

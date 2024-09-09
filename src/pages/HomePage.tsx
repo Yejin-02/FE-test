@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link, Outlet } from "react-router-dom";
 import { createBoard, deleteBoardById, getBoards } from "src/api/board";
+import { getAllTags } from "src/api/tag";
 import { useAuth } from "src/contexts/AuthContext";
-import { BoardSummaryDto } from "src/types";
+import { BoardSummaryDto, TagDto } from "src/types";
 
 const HomePage = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -54,17 +55,30 @@ const HomePage = () => {
     isLoading: boardsLoading,
   } = useQuery(["boards"], getBoards);
 
-  if (boardsLoading) {
+  const {
+    data: tagsData,
+    error: tagsError,
+    isLoading: tagsLoading,
+  } = useQuery(["tags"], getAllTags);
+
+  if (boardsLoading || tagsLoading) {
     return <div>Loading...</div>;
   }
 
   if (boardsError) {
     console.error("Failed to fetch boards:", boardsError);
-    return <div>Error fetching data</div>;
+    return <div>Error fetching boards data</div>;
+  }
+
+  if (tagsError) {
+    console.error("Failed to fetch tags:", tagsError);
+    return <div>Error fetching tags data</div>;
   }
 
   const boards = boardsData.list;
   const boardCount = boardsData.count;
+  const tags = tagsData.list;
+  const tagCount = tagsData.count;
 
   return (
     <div>
@@ -148,6 +162,20 @@ const HomePage = () => {
           </div>
         </nav>
         <Outlet />
+        <div>
+          <h3>모든 태그 보기</h3>
+          {tagCount === 0 ? (
+            <p>태그 없음</p>
+          ) : (
+            tags.map((tag: TagDto) => (
+              <>
+                <Link to={`/tags/${tag.key}`} key={tag.key}>
+                  <li>{tag.key}</li>
+                </Link>
+              </>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

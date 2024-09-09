@@ -1,3 +1,7 @@
+export type TagDto = {
+  key: string;
+};
+
 export type AddImageProps = {
   postID: string | undefined;
 };

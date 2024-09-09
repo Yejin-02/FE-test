@@ -16,6 +16,7 @@ import PostDetail from "./pages/PostDetail.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import SettingsPage from "./pages/SettingsPage.tsx";
+import TagBoard from "./pages/TagBoard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "boards/:boardUuid",
         element: <Board />,
+      },
+      {
+        path: "tags/:tag",
+        element: <TagBoard />,
       },
     ],
   },

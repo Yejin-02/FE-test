@@ -14,7 +14,7 @@ export const createBoard = async (boardTitle: string) => {
   return response.data;
 };
 
-// 게시판 삭제하기
+// 게시판 삭제하기 <-- 수정필요. 안 비어있으면 삭제 못 하는 듯? 그 부분 따로 경고문 처리 못 하나..
 export const deleteBoardById = async (boardId: string) => {
   const response = await authApiClient.delete(`/boards/${boardId}`, {});
   return response.data;

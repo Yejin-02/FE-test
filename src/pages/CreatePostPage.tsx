@@ -9,6 +9,8 @@ function CreatePostPage() {
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
+  const [inputTag, setInputTag] = useState("");
 
   const { data: boardsData } = useQuery("boards", getBoards);
 
@@ -59,6 +61,20 @@ function CreatePostPage() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && inputTag.trim()) {
+      if (!tags.includes(inputTag.trim())) {
+        setTags([...tags, inputTag.trim()]);
+      }
+      setInputTag("");
+    }
+  };
+
+  // 태그 제거 핸들러
+  const handleTagRemove = (tagToRemove: string) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
+
   return (
     <div>
       <h1>Create Post</h1>
@@ -90,6 +106,22 @@ function CreatePostPage() {
           required
         ></textarea>
         <input type="file" accept="image/*" onChange={handleFileChange} />
+      </div>
+      <div className="inputTag">
+        <div className="enteredTag">
+          {tags.map((tag) => (
+            <span key={tag} style={{ marginRight: 5 }}>
+              {tag} <button onClick={() => handleTagRemove(tag)}>x</button>
+            </span>
+          ))}
+        </div>
+        <input
+          type="text"
+          value={inputTag}
+          onChange={(e) => setInputTag(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Type a tag and press Enter"
+        />
       </div>
       <button
         onClick={() => {
