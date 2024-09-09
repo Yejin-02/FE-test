@@ -21,6 +21,7 @@ const ProfilePage = () => {
 
   return (
     <div>
+      <Link to="/">홈 화면으로 돌아가기</Link>
       <h1>Profile</h1>
       <div>
         <h3>내 프로필</h3>

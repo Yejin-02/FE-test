@@ -99,8 +99,21 @@ function CreatePostPage() {
     setPostTags(postTags.filter((tag) => tag !== tagToRemove));
   };
 
+  // 글쓰기 취소 핸들러
+  const handleCancle = () => {
+    const isConfirmed = window.confirm(
+      "뒤로 가기를 선택하면 글쓰기가 취소됩니다. 작성한 내용은 저장되지 않습니다. 취소하시겠습니까?",
+    );
+    if (isConfirmed) {
+      window.location.href = "/"; // 홈 화면으로 리디렉션
+    } else {
+      alert("뒤로 가기가 취소되었습니다.");
+    }
+  };
+
   return (
     <div>
+      <button onClick={handleCancle}>홈 화면으로 돌아가기</button>
       <h1>Create Post</h1>
       <div>
         <select

@@ -16,6 +16,7 @@ import PostDetail from "./pages/PostDetail.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import SearchBoard from "./pages/SearchBoard.tsx";
+import SearchTag from "./pages/SearchTag.tsx";
 import SettingsPage from "./pages/SettingsPage.tsx";
 import TagBoard from "./pages/TagBoard.tsx";
 
@@ -63,8 +64,12 @@ const router = createBrowserRouter([
     element: <SettingsPage />,
   },
   {
-    path: "/search",
+    path: "/search-posts",
     element: <SearchBoard />,
+  },
+  {
+    path: "/search-tags",
+    element: <SearchTag />,
   },
 ]);
 

@@ -98,16 +98,8 @@ export const deleteImageOfPost = async (id: string, imageId: string) => {
   return response.data;
 };
 
-// 게시글 검색 결과 <-- 수정필요
+// 게시글 검색 결과
 export const searchPostByKeyword = async (keyword: string) => {
   const response = await apiClient.get(`/posts/search?keyword=${keyword}`);
   return response.data;
-
-  /*
-  keyword: 제목 <- 이렇게 보냈는데
-  curl -X 'GET' \
-  'https://api.2024.newbies.gistory.me/posts/search?keyword=%EC%A0%9C%EB%AA%A9' \
-  -H 'accept: application/json' <- 이렇게 뜨는 이유 뭐지?
-  제목 -> %EC%A0%9C%EB%AA%A9 변환은 알아서 일어나는 거겠죠?
-   */
 };
