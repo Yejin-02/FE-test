@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import BoardItem from "src/components/BoardItem.tsx";
 import { useAuth } from "src/contexts/AuthContext";
 
 const ProfilePage = () => {
-  const { token } = useAuth();
+  const { token, expiresIn } = useAuth();
   //   const [ userNickname, setUserNickname ] = useState("");
   const navigate = useNavigate();
 
@@ -25,19 +24,19 @@ const ProfilePage = () => {
       <h1>Profile</h1>
       <div>
         <h3>내 프로필</h3>
-        <p>{token}</p>
-        <p>{refreshToken}</p>
+        <h3>accessToken</h3>
+        {token ? <p>{token}</p> : <p>없다</p>}
+        <h3>refreshToken</h3>
+        {refreshToken ? <p>{refreshToken}</p> : <p>없다</p>}
+        <h3>expiresIn</h3>
+        {expiresIn ? <p>{expiresIn}</p> : <p>없다</p>}
+        <h3>현재 날짜</h3>
+        <p>{new Date().getTime()}</p>
         <br />
         <Link to="/user-settings">
           <button>비밀번호 변경</button>
         </Link>
         <button>회원탈퇴</button>
-      </div>
-      <div>
-        <h3>내가 쓴 글</h3>
-        <BoardItem>1번</BoardItem>
-        <BoardItem>2번</BoardItem>
-        <BoardItem>3번</BoardItem>
       </div>
     </div>
   );

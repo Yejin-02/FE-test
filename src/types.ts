@@ -1,3 +1,7 @@
+export type AddImageProps = {
+  postID: string | undefined;
+};
+
 export interface BoardSummaryDto {
   id: string;
   title: string;

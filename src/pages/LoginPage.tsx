@@ -8,13 +8,17 @@ import { useAuth } from "../contexts/AuthContext.tsx";
 const LoginPage = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userPW, setUserPW] = useState("");
-  const { setToken } = useAuth();
+  const { token, setToken, setExpiresIn } = useAuth();
   const navigate = useNavigate();
+
+  const refreshToken = localStorage.getItem("refreshToken");
 
   const mutation = useMutation(() => login(userEmail, userPW), {
     onSuccess: (data) => {
+      const getCurrentTime = () => new Date().getTime();
+      setExpiresIn((getCurrentTime() + data.expiresIn * 1000).toString());
       setToken(data.accessToken);
-      localStorage.setItem("accessToken", data.accessToken)
+      localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
       navigate("/"); // 로그인 후 홈으로 이동
     },
@@ -53,8 +57,16 @@ const LoginPage = () => {
           <button type="submit">Login</button>
         </form>
       </div>
+      <h3>accessToken</h3>
+      {token ? <p>{token}</p> : <p>없다</p>}
+      <h3>refreshToken</h3>
+      {refreshToken ? <p>{refreshToken}</p> : <p>없다</p>}
     </div>
   );
 };
 
 export default LoginPage;
+function setExpiresIn(expiresIn: any) {
+  throw new Error("Function not implemented.");
+}
+

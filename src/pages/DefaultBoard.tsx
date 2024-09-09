@@ -1,25 +1,27 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { getAllPosts } from "src/api/posts";
 import BoardItem from "src/components/BoardItem";
 import { PostDto } from "src/types";
 
 const DefaultBoard = () => {
-  const [posts, setPosts] = useState([]);
-  const [postCount, setPostCount] = useState(0);
+  const {
+    data: postsData,
+    error: postsError,
+    isLoading: postsLoading,
+  } = useQuery(["posts"], getAllPosts);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const data = await getAllPosts();
-        setPosts(data.list);
-        setPostCount(data.count);
-      } catch (error) {
-        console.error("Failed to fetch posts:", error);
-      }
-    };
-    fetchPosts();
-  }, []);
+  if (postsLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (postsError) {
+    console.error("Failed to fetch posts:", postsError);
+    return <div>Error fetching data</div>;
+  }
+
+  const posts = postsData.list;
+  const postCount = postsData.count;
 
   return (
     <div>

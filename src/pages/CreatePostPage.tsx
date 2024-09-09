@@ -1,33 +1,43 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useQuery } from "react-query";
 import { getBoards } from "src/api/board";
-import { createPost } from "src/api/posts";
-import { BoardSummaryDto } from "src/types";
+import { createPost, uploadImageToPost } from "src/api/posts";
 
 // 태그 처리, 이미지 처리 추가 필요
 function CreatePostPage() {
-  const [boards, setBoards] = useState<BoardSummaryDto[]>([]);
   const [selectedBoardID, setSelectedBoardID] = useState("");
-  const [selectedBoardTitle, setSelectedBoardTitle] = useState("");
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
-  const boardUuid = "265f245a-8a6e-4278-9af8-2935b3e8e153";
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const { data: boardsData } = useQuery("boards", getBoards);
+
+  const boards = boardsData.list;
 
   const handleCreatePost = async (
     postTitle: string,
     postBody: string,
-    boardUuid: string,
+    selectedBoardID: string,
+    selectedFile: File | null,
   ) => {
     const postData = {
       title: postTitle,
       body: postBody,
       tags: [],
     };
+
     try {
-      const response = await createPost(boardUuid, postData);
-      console.log("Post created successfully:", response);
-      alert(`게시글이 성공적으로 작성되었습니다. ${response.data.id}`);
-      window.location.href = `/post-detail/${response.data.id}`; // 홈 화면으로 리디렉션
+      const response = await createPost(selectedBoardID, postData);
+      console.log("Post uploaded seccessfully");
+
+      const postUuid = response.id;
+      if (postUuid && selectedFile) {
+        await uploadImageToPost(postUuid, selectedFile);
+        console.log("Image uploaded successfully");
+      }
+
+      alert("게시글이 성공적으로 작성되었습니다. 게시글로 이동합니다.");
+      window.location.href = `/post-detail/${postUuid}`; // 게시글로 리디렉션
     } catch (error) {
       console.error("Failed to fetch posts:", error);
     }
@@ -35,23 +45,19 @@ function CreatePostPage() {
 
   const handleSelectBoard = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const boardID = event.target.value;
-    const selectedBoard = boards.find((board) => board.id === boardID);
-    const boardTitle = selectedBoard ? selectedBoard.title : "";
-    setSelectedBoardID(boardUuid);
-    setSelectedBoardTitle(boardTitle);
+    const boardTitle = boards.find((board: any) => board.id === boardID)?.title;
+    if (boardTitle) {
+      setSelectedBoardID(boardID);
+    }
   };
 
-  useEffect(() => {
-    const fetchBoards = async () => {
-      try {
-        const data = await getBoards();
-        setBoards(data.list);
-      } catch (error) {
-        console.error("Failed to fetch posts:", error);
-      }
-    };
-    fetchBoards();
-  }, []);
+  // 이미지 선택 핸들러
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+      alert("이미지 선택 핸들링 완료");
+    }
+  };
 
   return (
     <div>
@@ -59,21 +65,15 @@ function CreatePostPage() {
       <div>
         <select
           id="board-select"
-          value={selectedBoardTitle}
+          value={selectedBoardID}
           onChange={handleSelectBoard}
         >
-          {boards.map((board) => (
+          {boards.map((board: any) => (
             <option key={board.id} value={board.id}>
               {board.title}
             </option>
           ))}
         </select>
-        <div>
-          현재 선택된 카테고리
-          <p>{selectedBoardTitle}</p>
-          <p>{selectedBoardID}</p>
-        </div>
-
         <input
           type="text"
           value={postTitle}
@@ -89,11 +89,20 @@ function CreatePostPage() {
           style={{ width: "1000px" }}
           required
         ></textarea>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
-      <button>이미지 첨부</button>
       <button
         onClick={() => {
-          handleCreatePost(postTitle, postBody, boardUuid);
+          if (selectedFile) {
+            handleCreatePost(
+              postTitle,
+              postBody,
+              selectedBoardID,
+              selectedFile,
+            );
+          } else {
+            handleCreatePost(postTitle, postBody, selectedBoardID, null);
+          }
         }}
       >
         발행

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link, Outlet } from "react-router-dom";
 import { createBoard, deleteBoardById, getBoards } from "src/api/board";
 import { useAuth } from "src/contexts/AuthContext";
@@ -6,8 +7,6 @@ import { BoardSummaryDto } from "src/types";
 
 const HomePage = () => {
   const [isLogin, setIsLogin] = useState(false);
-  const [boards, setBoards] = useState([]);
-  const [boardCount, setBoardCount] = useState(0);
   const [newBoardTitle, setNewBoardTitle] = useState("");
   const { token, logout } = useAuth();
 
@@ -49,18 +48,23 @@ const HomePage = () => {
     }
   }, [token]);
 
-  useEffect(() => {
-    const fetchBoards = async () => {
-      try {
-        const data = await getBoards();
-        setBoards(data.list);
-        setBoardCount(data.count);
-      } catch (error) {
-        console.error("Failed to fetch posts:", error);
-      }
-    };
-    fetchBoards();
-  }, []);
+  const {
+    data: boardsData,
+    error: boardsError,
+    isLoading: boardsLoading,
+  } = useQuery(["boards"], getBoards);
+
+  if (boardsLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (boardsError) {
+    console.error("Failed to fetch boards:", boardsError);
+    return <div>Error fetching data</div>;
+  }
+
+  const boards = boardsData.list;
+  const boardCount = boardsData.count;
 
   return (
     <div>
