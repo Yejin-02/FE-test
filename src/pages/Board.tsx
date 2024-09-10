@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import { getPostsByBoard } from "src/api/posts";
-import BoardItem from "src/components/BoardItem";
+import { BoardItem, BoardWrapper } from "src/styledComponents";
 import { PostDto } from "src/types";
 
 const Board = () => {
@@ -28,23 +28,20 @@ const Board = () => {
   const postCount = postsData.count;
 
   return (
-    <div>
+    <>
+      <h3>게시글 목록</h3>
       {postCount === 0 ? (
         <p>No posts available.</p>
       ) : (
-        <ul>
+        <BoardWrapper>
           {posts.map((post: PostDto) => (
-            <Link to={`/post-detail/${post.id}`} key={post.id}>
-              <BoardItem>
-                <li>
-                  {post.title} - {post.createdBy.nickname}
-                </li>
-              </BoardItem>
-            </Link>
+            <BoardItem to={`/post-detail/${post.id}`} key={post.id}>
+              {post.title} - {post.createdBy.nickname}
+            </BoardItem>
           ))}
-        </ul>
+        </BoardWrapper>
       )}
-    </div>
+    </>
   );
 };
 

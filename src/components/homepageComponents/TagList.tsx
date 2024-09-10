@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { TagListUl, TagListLi } from "src/styledComponents";
 import { TagDto } from "src/types";
 
 type TagListProps = {
@@ -13,11 +14,13 @@ const TagList = ({ tags, tagCount }: TagListProps) => {
       {tagCount === 0 ? (
         <p>태그 없음</p>
       ) : (
-        tags.map((tag: TagDto) => (
-          <Link to={`/tags/${tag.key}`} key={tag.key}>
-            <li>{tag.key}</li>
-          </Link>
-        ))
+        <TagListUl>
+          {tags.map((tag: TagDto) => (
+            <TagListLi to={`/tags/${tag.key}`} key={tag.key}>
+              #{tag.key}
+            </TagListLi>
+          ))}
+        </TagListUl>
       )}
     </div>
   );

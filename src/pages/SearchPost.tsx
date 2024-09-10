@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { searchPostByKeyword } from "src/api/posts";
-import BoardItem from "src/components/BoardItem";
+import { BoardItem, BoardWrapper } from "src/styledComponents";
 import { PostDto } from "src/types";
 
-const DefaultBoard = () => {
+const SearchPost = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [posts, setPosts] = useState([]);
   const [postCount, setPostCount] = useState(0);
@@ -37,20 +37,16 @@ const DefaultBoard = () => {
       {postCount === 0 ? (
         <p>검색 결과 없음</p>
       ) : (
-        <ul>
+        <BoardWrapper>
           {posts.map((post: PostDto) => (
-            <Link to={`/post-detail/${post.id}`} key={post.id}>
-              <BoardItem>
-                <li>
-                  {post.title} - {post.createdBy.nickname}
-                </li>
-              </BoardItem>
-            </Link>
+            <BoardItem to={`/post-detail/${post.id}`} key={post.id}>
+              {post.title} - {post.createdBy.nickname}
+            </BoardItem>
           ))}
-        </ul>
+        </BoardWrapper>
       )}
     </div>
   );
 };
 
-export default DefaultBoard;
+export default SearchPost;

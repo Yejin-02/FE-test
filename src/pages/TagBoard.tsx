@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import { getPostsByTag } from "src/api/posts";
-import BoardItem from "src/components/BoardItem";
+import { BoardItem, BoardWrapper } from "src/styledComponents";
 import { PostDto } from "src/types";
 
 const TagBoard = () => {
@@ -27,21 +27,20 @@ const TagBoard = () => {
 
   return (
     <div>
-      <h3>{tag} 태그가 달린 모든 글</h3>
+      <h3>
+        <span style={{ fontWeight: "bold", color: "red" }}>{tag}</span> 태그가
+        달린 모든 글
+      </h3>
       {postCount === 0 ? (
         <p>No posts available.</p>
       ) : (
-        <ul>
+        <BoardWrapper>
           {posts.map((post: PostDto) => (
-            <Link to={`/post-detail/${post.id}`} key={post.id}>
-              <BoardItem>
-                <li>
-                  {post.title} - {post.createdBy.nickname}
-                </li>
-              </BoardItem>
-            </Link>
+            <BoardItem to={`/post-detail/${post.id}`} key={post.id}>
+              {post.title} - {post.createdBy.nickname}
+            </BoardItem>
           ))}
-        </ul>
+        </BoardWrapper>
       )}
     </div>
   );

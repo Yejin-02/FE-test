@@ -15,10 +15,11 @@ import LoginPage from "./pages/LoginPage.tsx";
 import PostDetail from "./pages/PostDetail.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
-import SearchBoard from "./pages/SearchBoard.tsx";
+import SearchPost from "./pages/SearchPost.tsx";
 import SearchTag from "./pages/SearchTag.tsx";
 import SettingsPage from "./pages/SettingsPage.tsx";
 import TagBoard from "./pages/TagBoard.tsx";
+import { MainContainer, MainWrapper } from "./styledComponents.tsx";
 
 const router = createBrowserRouter([
   {
@@ -65,7 +66,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/search-posts",
-    element: <SearchBoard />,
+    element: <SearchPost />,
   },
   {
     path: "/search-tags",
@@ -77,7 +78,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <MainWrapper>
+          <MainContainer>
+            <RouterProvider router={router} />
+          </MainContainer>
+        </MainWrapper>
       </AuthProvider>
     </QueryClientProvider>
   </React.StrictMode>,

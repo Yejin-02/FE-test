@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { LoginButton, LoginLink, LoginWrapper } from "src/styledComponents";
 
 type LoginSectionProps = {
   isLogin: boolean;
@@ -7,35 +7,20 @@ type LoginSectionProps = {
 
 const LoginSection = ({ isLogin, handleLogout }: LoginSectionProps) => {
   return (
-    <div
-      style={{
-        width: "100%",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "end",
-      }}
-    >
+    <>
       {isLogin ? (
-        <>
-          <Link to={"/create-post"}>
-            <button>글 쓰러 가기</button>
-          </Link>
-          <Link to={"/profile"}>
-            <button>프로필 보기</button>
-          </Link>
-          <button onClick={handleLogout}>로그아웃</button>
-        </>
+        <LoginWrapper>
+          <LoginLink to={"/create-post"}>글 쓰러 가기</LoginLink>
+          <LoginLink to={"/profile"}>프로필 보기</LoginLink>
+          <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
+        </LoginWrapper>
       ) : (
-        <>
-          <Link to={"/login"}>
-            <button>로그인</button>
-          </Link>
-          <Link to={"/sign-up"}>
-            <button>회원 가입</button>
-          </Link>
-        </>
+        <LoginWrapper>
+          <LoginLink to={"/login"}>로그인</LoginLink>
+          <LoginLink to={"/sign-up"}>회원 가입</LoginLink>
+        </LoginWrapper>
       )}
-    </div>
+    </>
   );
 };
 

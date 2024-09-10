@@ -1,13 +1,9 @@
-import { useState } from "react";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
-import { getAllPosts, searchPostByKeyword } from "src/api/posts";
-import BoardItem from "src/components/BoardItem";
+import { getAllPosts } from "src/api/posts";
+import { BoardItem, BoardWrapper } from "src/styledComponents";
 import { PostDto } from "src/types";
 
 const DefaultBoard = () => {
-  const [searchKeyword, setSearchKeyword] = useState("");
-
   const {
     data: postsData,
     error: postsError,
@@ -26,42 +22,19 @@ const DefaultBoard = () => {
   const posts = postsData.list;
   const postCount = postsData.count;
 
-  const handleSearchPost = async (keyword: string) => {
-    const response = await searchPostByKeyword(keyword);
-  };
-
   return (
     <div>
-      <div className="searchPostByTitle">
-        <input
-          type="text"
-          placeholder="제목으로 검색"
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value)}
-          required
-        ></input>
-        <button
-          onClick={() => {
-            handleSearchPost(searchKeyword);
-          }}
-        >
-          검색
-        </button>
-      </div>
+      <h3>전체 게시글 목록</h3>
       {postCount === 0 ? (
         <p>No posts available.</p>
       ) : (
-        <ul>
+        <BoardWrapper>
           {posts.map((post: PostDto) => (
-            <Link to={`/post-detail/${post.id}`} key={post.id}>
-              <BoardItem>
-                <li>
-                  {post.title} - {post.createdBy.nickname}
-                </li>
-              </BoardItem>
-            </Link>
+            <BoardItem to={`/post-detail/${post.id}`} key={post.id}>
+              {post.title} - {post.createdBy.nickname}
+            </BoardItem>
           ))}
-        </ul>
+        </BoardWrapper>
       )}
     </div>
   );

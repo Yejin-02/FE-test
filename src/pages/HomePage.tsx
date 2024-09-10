@@ -9,6 +9,7 @@ import BoardList from "../components/homepageComponents/BoardList";
 import Loading from "../components/homepageComponents/Loading";
 import LoginSection from "../components/homepageComponents/LoginSection";
 import TagList from "../components/homepageComponents/TagList";
+import { HomapageTitle } from "src/styledComponents";
 
 const HomePage = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -86,20 +87,24 @@ const HomePage = () => {
 
   return (
     <div>
-      <h1>HomePage</h1>
+      <HomapageTitle
+        onClick={() => {
+          window.location.href = `/`;
+        }}
+      >
+        게시판
+      </HomapageTitle>
       <LoginSection isLogin={isLogin} handleLogout={handleLogout} />
-      <div>
-        <BoardList
-          boards={boards}
-          boardCount={boardCount}
-          newBoardTitle={newBoardTitle}
-          setNewBoardTitle={setNewBoardTitle}
-          handleCreateNewBoard={handleCreateNewBoard}
-          handleDeleteBoard={handleDeleteBoard}
-        />
-        <Outlet />
-        <TagList tags={tags} tagCount={tagCount} />
-      </div>
+      <BoardList
+        boards={boards}
+        boardCount={boardCount}
+        newBoardTitle={newBoardTitle}
+        setNewBoardTitle={setNewBoardTitle}
+        handleCreateNewBoard={handleCreateNewBoard}
+        handleDeleteBoard={handleDeleteBoard}
+      />
+      <Outlet />
+      <TagList tags={tags} tagCount={tagCount} />
     </div>
   );
 };

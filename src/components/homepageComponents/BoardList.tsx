@@ -1,4 +1,11 @@
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import {
+  AddNewBoard,
+  BoardDeleteButton,
+  BoardListLi,
+  BoardListUl,
+  SelectedBoardListLi,
+} from "src/styledComponents";
 import { BoardSummaryDto } from "src/types";
 
 type BoardListProps = {
@@ -18,33 +25,45 @@ const BoardList = ({
   handleCreateNewBoard,
   handleDeleteBoard,
 }: BoardListProps) => {
+  const { boardUuid } = useParams<{ boardUuid?: string }>();
+
   return (
     <nav>
+      <h3>게시판 목록</h3>
       {boardCount === 0 ? (
-        <ul>
-          <Link to={`/`}>
-            <li>전체 게시판</li>
-          </Link>
-        </ul>
+        <BoardListUl>
+          <BoardListLi to={`/`}>전체 게시판</BoardListLi>
+          <BoardListLi to="/search-posts">게시글 검색하러 가기</BoardListLi>
+        </BoardListUl>
       ) : (
-        <ul>
-          <Link to={`/`}>
-            <li>전체 게시판</li>
-          </Link>
-          {boards.map((board: BoardSummaryDto) => (
-            <div key={board.id}>
-              <Link to={`/boards/${board.id}`}>
-                <li>{board.title}</li>
-              </Link>
-              <button onClick={() => handleDeleteBoard(board.id)}>
-                게시판 삭제
-              </button>
-            </div>
-          ))}
-        </ul>
+        <BoardListUl>
+          {boards.map((board: BoardSummaryDto) =>
+            board.id === boardUuid ? (
+              <SelectedBoardListLi to={`/boards/${board.id}`} key={board.id}>
+                <p>{board.title}</p>
+                <BoardDeleteButton onClick={() => handleDeleteBoard(board.id)}>
+                  x
+                </BoardDeleteButton>
+              </SelectedBoardListLi>
+            ) : (
+              <BoardListLi to={`/boards/${board.id}`} key={board.id}>
+                <p>{board.title}</p>
+                <BoardDeleteButton onClick={() => handleDeleteBoard(board.id)}>
+                  x
+                </BoardDeleteButton>
+              </BoardListLi>
+            ),
+          )}
+          {boardUuid === undefined ? (
+            <SelectedBoardListLi to={`/`}>전체 게시판</SelectedBoardListLi>
+          ) : (
+            <BoardListLi to={`/`}>전체 게시판</BoardListLi>
+          )}
+
+          <BoardListLi to="/search-posts">게시글 검색하러 가기</BoardListLi>
+        </BoardListUl>
       )}
-      <div>
-        새 게시판 추가
+      <AddNewBoard>
         <input
           type="text"
           placeholder="새 게시판 이름"
@@ -57,9 +76,9 @@ const BoardList = ({
             handleCreateNewBoard(newBoardTitle);
           }}
         >
-          생성
+          게시판 생성
         </button>
-      </div>
+      </AddNewBoard>
     </nav>
   );
 };
