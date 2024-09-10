@@ -7,6 +7,7 @@ import { createTag, getAllTags } from "src/api/tag";
 import BoardSelect from "./../components/createpostComponents/BoardSelect";
 import PostForm from "./../components/createpostComponents/PostForm";
 import TagInput from "./../components/createpostComponents/TagInput";
+import { PagesWrapper, RedirectHome } from "src/styledComponents";
 
 function CreatePostPage() {
   const [selectedBoardID, setSelectedBoardID] = useState("");
@@ -98,7 +99,8 @@ function CreatePostPage() {
     setPostTags(postTags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleCancle = () => {
+  const handleCancle = (event: { preventDefault: () => void }) => {
+    event.preventDefault(); // 기본 Link 동작을 막음
     const isConfirmed = window.confirm(
       "뒤로 가기를 선택하면 글쓰기가 취소됩니다. 작성한 내용은 저장되지 않습니다. 취소하시겠습니까?",
     );
@@ -116,8 +118,10 @@ function CreatePostPage() {
   };
 
   return (
-    <div>
-      <button onClick={handleCancle}>홈 화면으로 돌아가기</button>
+    <PagesWrapper>
+      <RedirectHome to="/" onClick={handleCancle}>
+        {"< 홈 화면으로 돌아가기"}
+      </RedirectHome>
       <h1>Create Post</h1>
       <BoardSelect
         boards={boards}
@@ -153,7 +157,7 @@ function CreatePostPage() {
       >
         발행
       </button>
-    </div>
+    </PagesWrapper>
   );
 }
 

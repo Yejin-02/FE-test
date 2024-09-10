@@ -1,6 +1,11 @@
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "src/contexts/AuthContext";
+import {
+  PagesWrapper,
+  ProfilePageLink,
+  RedirectHome,
+} from "src/styledComponents";
 
 const ProfilePage = () => {
   const { token, expiresIn } = useAuth();
@@ -20,8 +25,8 @@ const ProfilePage = () => {
   const refreshToken = localStorage.getItem("refreshToken");
 
   return (
-    <div>
-      <Link to="/">홈 화면으로 돌아가기</Link>
+    <PagesWrapper>
+      <RedirectHome to="/">{"< 홈 화면으로 돌아가기"}</RedirectHome>
       <h1>Profile</h1>
       <div>
         <h3>내 프로필</h3>
@@ -34,12 +39,10 @@ const ProfilePage = () => {
         <h3>현재 날짜</h3>
         <p>{new Date().getTime()}</p>
         <br />
-        <Link to="/user-settings">
-          <button>비밀번호 변경</button>
-        </Link>
-        <button>회원탈퇴</button>
+        <ProfilePageLink to="/user-settings">비밀번호 변경</ProfilePageLink>
+        <ProfilePageLink to="/user-settings">회원탈퇴</ProfilePageLink>
       </div>
-    </div>
+    </PagesWrapper>
   );
 };
 

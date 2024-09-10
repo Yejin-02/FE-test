@@ -159,7 +159,7 @@ export const AddNewBoard = styled.div`
     height: 50px;
 
     border-radius: 10px;
-    width: 120px; /* 버튼의 너비를 조정하여 더 안정적인 레이아웃 */
+    width: 120px;
 
     background-color: beige;
     color: black;
@@ -169,6 +169,13 @@ export const AddNewBoard = styled.div`
       background-color: aqua;
     }
   }
+`;
+
+export const SearchDiv = styled(AddNewBoard)`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-bottom: 10px;
 `;
 
 // 게시판의 모든 글을 보여주는 리스트의 래퍼
@@ -234,5 +241,81 @@ export const TagListLi = styled(Link)`
   &:hover {
     background-color: aqua;
     color: black;
+  }
+`;
+
+export const TagListItem = styled.li`
+  background-color: white;
+  color: black;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  height: 35px;
+  padding: 0 10px 0 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+
+  button {
+    margin-left: 5px;
+    border-radius: 100%;
+    width: 25px;
+    height: 25px;
+
+    background-color: gray;
+    color: white;
+    border: 0;
+
+    &:hover {
+      color: white;
+      background-color: black;
+    }
+  }
+`;
+
+export const PagesWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-top: 50px;
+`;
+
+export const RedirectHome = styled(Link)`
+  display: inline-block;
+  border-radius: 10px;
+  border: 2px solid white;
+  color: white;
+  text-decoration: none;
+  margin-right: 10px;
+
+  height: 30px;
+  line-height: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: fit-content;
+
+  &:hover {
+    background-color: aqua;
+    color: black;
+  }
+`;
+
+export const ProfilePageLink = styled(Link)`
+  display: inline-block;
+  background-color: white;
+  border-radius: 10px;
+  color: black;
+  text-decoration: none;
+  margin-right: 10px;
+
+  height: 30px;
+  line-height: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: fit-content;
+
+  &:hover {
+    background-color: aqua;
   }
 `;

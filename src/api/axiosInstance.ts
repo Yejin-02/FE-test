@@ -91,6 +91,7 @@ const onAxiosResponseError = async (error: AxiosError): Promise<never> => {
         if (!emptyTokenResponse) {
           localStorage.setItem("accessToken", newAccessToken);
           if (originalRequest) {
+            console.log("토큰 붙여서 원래 요청 반환");
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             return apiClient(originalRequest);
           } else {

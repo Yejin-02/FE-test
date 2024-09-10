@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { searchTag } from "src/api/tag";
+import { PagesWrapper, RedirectHome, SearchDiv, TagListLi, TagListUl } from "src/styledComponents";
 import { TagDto } from "src/types";
 
 const SearchTag = () => {
@@ -15,9 +16,11 @@ const SearchTag = () => {
   };
 
   return (
-    <div>
-      <Link to="/">홈으로 돌아가기</Link>
-      <div className="setTag">
+    <PagesWrapper>
+      <RedirectHome to="/">홈으로 돌아가기</RedirectHome>
+      <h1>Search Tag</h1>
+      <p>키워드가 포함되는 태그를 확인하세요</p>
+      <SearchDiv>
         <input
           type="text"
           placeholder="태그 검색"
@@ -32,19 +35,19 @@ const SearchTag = () => {
         >
           검색
         </button>
-      </div>
+      </SearchDiv>
       {tagCount === 0 ? (
         <p>검색 결과 없음</p>
       ) : (
-        <ul>
+        <TagListUl>
           {tags.map((tag: TagDto) => (
             <div key={tag.key}>
-              <Link to={`/tags/${tag.key}`}>{tag.key}</Link>
+              <TagListLi to={`/tags/${tag.key}`}>#{tag.key}</TagListLi>
             </div>
           ))}
-        </ul>
+        </TagListUl>
       )}
-    </div>
+    </PagesWrapper>
   );
 };
 

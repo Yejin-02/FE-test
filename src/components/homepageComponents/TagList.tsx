@@ -20,6 +20,7 @@ const TagList = ({ tags, tagCount }: TagListProps) => {
               #{tag.key}
             </TagListLi>
           ))}
+          <TagListLi to="/search-tags">태그 검색하러 가기</TagListLi>
         </TagListUl>
       )}
     </div>

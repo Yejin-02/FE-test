@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { searchPostByKeyword } from "src/api/posts";
-import { BoardItem, BoardWrapper } from "src/styledComponents";
+import { AddNewBoard, BoardItem, BoardWrapper, PagesWrapper, RedirectHome, SearchDiv } from "src/styledComponents";
 import { PostDto } from "src/types";
 
 const SearchPost = () => {
@@ -16,12 +16,14 @@ const SearchPost = () => {
   };
 
   return (
-    <div>
-      <Link to="/">홈으로 돌아가기</Link>
-      <div className="searchPostByTitle">
+    <PagesWrapper>
+      <RedirectHome to="/">홈으로 돌아가기</RedirectHome>
+      <h1>Search Post</h1>
+      <p>제목이나 게시글에 키워드가 포함되는 글을 확인하세요</p>
+      <SearchDiv>
         <input
           type="text"
-          placeholder="제목으로 검색"
+          placeholder="키워드로 검색"
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
           required
@@ -33,7 +35,7 @@ const SearchPost = () => {
         >
           검색
         </button>
-      </div>
+      </SearchDiv>
       {postCount === 0 ? (
         <p>검색 결과 없음</p>
       ) : (
@@ -45,7 +47,7 @@ const SearchPost = () => {
           ))}
         </BoardWrapper>
       )}
-    </div>
+    </PagesWrapper>
   );
 };
 

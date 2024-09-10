@@ -4,6 +4,12 @@ import { useParams } from "react-router-dom";
 import { deletePostById, getPostById } from "src/api/posts";
 
 import { ImageDto, PostDto } from "../types";
+import {
+  PagesWrapper,
+  RedirectHome,
+  TagListLi,
+  TagListUl,
+} from "src/styledComponents";
 
 const PostDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -49,42 +55,51 @@ const PostDetail = () => {
   const handlePatch = () => {};
 
   return (
-    <div>
+    <PagesWrapper>
+      <RedirectHome to="/">{"< 홈 화면으로 돌아가기"}</RedirectHome>
       <h1>Post Detail</h1>
-      <Link to="/">
-        <button>뒤로 가기</button>
-      </Link>
-      <p>게시판: {post?.board.title}</p>
-      <p>제목: {post?.title}</p>
-      <p>내용: {post?.body}</p>
-      <p>아이디: {post?.id}</p>
-      <p>
-        {post?.images.map((image: ImageDto) => {
-          return (
-            <div key={image.id}>
-              <img
-                id={image.id}
-                alt="image"
-                src={`data:image/png;base64,${image.image}`}
-              />
-              <p>image id: {image.id}</p>
-            </div>
-          );
-        })}
-      </p>
+      <div
+        style={{
+          backgroundColor: "white",
+          color: "black",
+          paddingLeft: "10px",
+        }}
+      >
+        <h3>제목: {post?.title}</h3>
+        <p style={{ textAlign: "end", paddingRight: "10px", margin: "0" }}>
+          게시판: {post?.board.title}
+        </p>
+        <p style={{ textAlign: "end", paddingRight: "10px", margin: "0" }}>
+          작성자 아이디: {post?.id}
+        </p>
+        <p>{post?.body}</p>
+        <p>
+          {post?.images.map((image: ImageDto) => {
+            return (
+              <div key={image.id}>
+                <img
+                  id={image.id}
+                  alt="image"
+                  src={`data:image/png;base64,${image.image}`}
+                />
+                <p>image id: {image.id}</p>
+              </div>
+            );
+          })}
+        </p>
+      </div>
       <div>
-        태그:{" "}
-        {post?.tags?.map((tag) => (
-          <>
-            <Link to={`/tags/${tag}`} key={tag}>
-              <li>{tag}</li>
-            </Link>
-          </>
-        ))}
+        <TagListUl>
+          {post?.tags?.map((tag) => (
+            <TagListLi to={`/tags/${tag}`} key={tag}>
+              #{tag}
+            </TagListLi>
+          ))}
+        </TagListUl>
       </div>
       <button onClick={handleDelete}>삭제하기</button>
       <button onClick={handlePatch}>수정하기..는 아직 미완성</button>
-    </div>
+    </PagesWrapper>
   );
 };
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { TagListItem, TagListUl } from "src/styledComponents";
 
 type TagInputProps = {
   postTags: string[];
@@ -16,14 +17,15 @@ const TagInput: React.FC<TagInputProps> = ({
   onTagRemove,
 }) => (
   <div className="inputTag">
-    <div className="enteredTag">
+    <TagListUl>
       {postTags.map((tag) => (
-        <span key={tag} style={{ marginRight: 5 }}>
-          {tag}
+        <TagListItem key={tag}>
+          #{tag}
           <button onClick={() => onTagRemove(tag)}>x</button>
-        </span>
+        </TagListItem>
       ))}
-    </div>
+    </TagListUl>
+
     <input
       type="text"
       value={inputTag}
