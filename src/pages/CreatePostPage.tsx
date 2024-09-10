@@ -4,7 +4,10 @@ import { getBoards } from "src/api/board";
 import { createPost, uploadImageToPost } from "src/api/posts";
 import { createTag, getAllTags } from "src/api/tag";
 
-// 태그 처리, 이미지 처리 추가 필요
+import BoardSelect from "./../components/createpostComponents/BoardSelect";
+import PostForm from "./../components/createpostComponents/PostForm";
+import TagInput from "./../components/createpostComponents/TagInput";
+
 function CreatePostPage() {
   const [selectedBoardID, setSelectedBoardID] = useState("");
   const [postTitle, setPostTitle] = useState("");
@@ -39,7 +42,6 @@ function CreatePostPage() {
       const newTags = postTags.filter(
         (postTag) => !existingTagKeys.includes(postTag),
       );
-      console.log(newTags);
 
       // 새 태그만 새로이 업로드
       for (const tag of newTags) {
@@ -51,7 +53,7 @@ function CreatePostPage() {
 
       // 제목-내용-태그 전달하여 포스트 업로드
       const response = await createPost(selectedBoardID, postData);
-      console.log("Post uploaded seccessfully");
+      console.log("Post uploaded successfully");
 
       // post id 받아와서 이미지 업로드
       const postUuid = response.id;
@@ -70,17 +72,12 @@ function CreatePostPage() {
 
   const handleSelectBoard = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const boardID = event.target.value;
-    const boardTitle = boards.find((board: any) => board.id === boardID)?.title;
-    if (boardTitle) {
-      setSelectedBoardID(boardID);
-    }
+    setSelectedBoardID(boardID);
   };
 
-  // 이미지 선택 핸들러
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setSelectedFile(event.target.files[0]);
-      alert("이미지 선택 핸들링 완료");
     }
   };
 
@@ -94,12 +91,10 @@ function CreatePostPage() {
     }
   };
 
-  // 태그 제거 핸들러
   const handleTagRemove = (tagToRemove: string) => {
     setPostTags(postTags.filter((tag) => tag !== tagToRemove));
   };
 
-  // 글쓰기 취소 핸들러
   const handleCancle = () => {
     const isConfirmed = window.confirm(
       "뒤로 가기를 선택하면 글쓰기가 취소됩니다. 작성한 내용은 저장되지 않습니다. 취소하시겠습니까?",
@@ -115,72 +110,35 @@ function CreatePostPage() {
     <div>
       <button onClick={handleCancle}>홈 화면으로 돌아가기</button>
       <h1>Create Post</h1>
-      <div>
-        <select
-          id="board-select"
-          value={selectedBoardID}
-          onChange={handleSelectBoard}
-        >
-          {boards.map((board: any) => (
-            <option key={board.id} value={board.id}>
-              {board.title}
-            </option>
-          ))}
-        </select>
-        <input
-          type="text"
-          value={postTitle}
-          onChange={(e) => setPostTitle(e.target.value)}
-          placeholder="제목"
-          style={{ width: "1000px" }}
-          required
-        ></input>
-        <textarea
-          value={postBody}
-          onChange={(e) => setPostBody(e.target.value)}
-          placeholder="내용"
-          style={{ width: "1000px" }}
-          required
-        ></textarea>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-      </div>
-      <div className="inputTag">
-        <div className="enteredTag">
-          {postTags.map((tag) => (
-            <span key={tag} style={{ marginRight: 5 }}>
-              {tag}
-              <button onClick={() => handleTagRemove(tag)}>x</button>
-            </span>
-          ))}
-        </div>
-        <input
-          type="text"
-          value={inputTag}
-          onChange={(e) => setInputTag(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a tag and press Enter"
-        />
-      </div>
+      <BoardSelect
+        boards={boards}
+        selectedBoardID={selectedBoardID}
+        onSelectBoard={handleSelectBoard}
+      />
+      <PostForm
+        postTitle={postTitle}
+        postBody={postBody}
+        onTitleChange={(e) => setPostTitle(e.target.value)}
+        onBodyChange={(e) => setPostBody(e.target.value)}
+        onFileChange={handleFileChange}
+      />
+      <TagInput
+        postTags={postTags}
+        inputTag={inputTag}
+        onTagChange={(e) => setInputTag(e.target.value)}
+        onTagKeyDown={handleKeyDown}
+        onTagRemove={handleTagRemove}
+      />
       <button
-        onClick={() => {
-          if (selectedFile) {
-            handleCreatePost(
-              postTitle,
-              postBody,
-              postTags,
-              selectedBoardID,
-              selectedFile,
-            );
-          } else {
-            handleCreatePost(
-              postTitle,
-              postBody,
-              postTags,
-              selectedBoardID,
-              null,
-            );
-          }
-        }}
+        onClick={() =>
+          handleCreatePost(
+            postTitle,
+            postBody,
+            postTags,
+            selectedBoardID,
+            selectedFile,
+          )
+        }
       >
         발행
       </button>

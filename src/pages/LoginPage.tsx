@@ -66,7 +66,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-function setExpiresIn(expiresIn: any) {
-  throw new Error("Function not implemented.");
-}
-
