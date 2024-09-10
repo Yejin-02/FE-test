@@ -6,6 +6,14 @@ import axios, {
 
 import { refresh } from "./auth";
 
+// auth 테스트용
+export const authTestClient = axios.create({
+  baseURL: "/local",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 // 기본 URL 설정
 export const apiClient = axios.create({
   baseURL: "/local",
@@ -25,23 +33,40 @@ export const authApiClient = axios.create({
 const onAxiosRequest = async (
   config: InternalAxiosRequestConfig,
 ): Promise<InternalAxiosRequestConfig> => {
-  const accessToken = localStorage.getItem("accessToken");
-  alert(accessToken); // 요청 보낼 때 액세스 토큰 잘 있나 확인
+  // 특정 엔드포인트에 대해 401 오류를 강제로 발생
+  if (config.url === "/test-endpoint") {
+    return Promise.reject({
+      response: {
+        status: 401,
+      },
+    });
+  }
 
+  // 이외에는 정상 작동
+  const accessToken = localStorage.getItem("accessToken");
   if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`; // 있으면 그대로 붙여 보내기
+    config.headers.Authorization = `Bearer ${accessToken}`;
   } else {
-    window.location.href = "/login";
+    return Promise.reject(
+      new Error("Access token is missing. Please log in again."),
+    );
   }
   return config;
 };
 
-const onAxiosRequestError = (error: AxiosError | Error): Promise<AxiosError> =>
-  Promise.reject(error);
+const onAxiosRequestError = (
+  error: AxiosError | Error,
+): Promise<AxiosError> => {
+  if (error.message.includes("Access token is missing")) {
+    window.location.href = "/login";
+  }
+  return Promise.reject(error);
+};
 
 authApiClient.interceptors.request.use(onAxiosRequest, onAxiosRequestError);
+authTestClient.interceptors.request.use(onAxiosRequest, onAxiosRequestError);
 
-// 응답 인터셉터 설정
+// 응답 인터셉터
 const onAxiosResponse = async (
   response: AxiosResponse,
 ): Promise<AxiosResponse> => {
@@ -60,47 +85,32 @@ const onAxiosResponseError = async (error: AxiosError): Promise<never> => {
       try {
         // Refresh Token으로 Access Token 갱신
         const refreshTokenResponse = await refresh(refreshToken);
-        const newAccessToken = refreshTokenResponse.resultData?.accessToken;
+        const newAccessToken = refreshTokenResponse.accessToken;
+        const emptyTokenResponse = !newAccessToken || newAccessToken === "";
 
-        if (refreshTokenResponse.resultCode === 0 && newAccessToken) {
+        if (!emptyTokenResponse) {
           localStorage.setItem("accessToken", newAccessToken);
-          // originalRequest가 정의되어 있는지 확인
           if (originalRequest) {
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-            // 중단된 요청을 재요청
             return apiClient(originalRequest);
           } else {
-            // originalRequest가 정의되지 않은 경우
-            alert("요청 정보가 존재하지 않습니다.");
-            localStorage.clear();
-            window.location.href = "/login";
+            console.log("originalRequest를 찾을 수 없음");
+            handleUnauthorized();
             return Promise.reject(error);
           }
-        } else if (refreshTokenResponse.resultCode === 1002) {
-          // Refresh Token이 만료된 경우
-          alert("인증이 만료되었습니다. 다시 로그인해주세요.");
-          localStorage.clear();
-          window.location.href = "/login";
-          return Promise.reject(error);
         } else {
-          // 기타 오류 처리
-          alert("토큰 재발급 과정 네트워크 오류");
-          localStorage.clear();
-          window.location.href = "/login";
+          console.log("new access token이 비어있음");
+          handleUnauthorized();
           return Promise.reject(error);
         }
       } catch (refreshError) {
-        // Refresh Token 요청 중 오류 발생
-        alert("토큰 갱신 중 오류 발생");
-        localStorage.clear();
-        window.location.href = "/login";
+        console.log("재발급 중 오류 발생");
+        handleUnauthorized();
         return Promise.reject(refreshError);
       }
     } else {
-      // Refresh Token이 없는 경우
-      alert("Refresh Token이 존재하지 않습니다.");
-      localStorage.clear();
-      window.location.href = "/login";
+      console.log("refresh token이 없음");
+      handleUnauthorized();
       return Promise.reject(error);
     }
   }
@@ -117,5 +127,12 @@ const onAxiosResponseError = async (error: AxiosError): Promise<never> => {
   return Promise.reject(error);
 };
 
+const handleUnauthorized = () => {
+  alert("인증이 만료되었습니다. 다시 로그인해주세요.");
+  localStorage.clear();
+  window.location.href = "/login";
+};
+
 apiClient.interceptors.response.use(onAxiosResponse, onAxiosResponseError);
 authApiClient.interceptors.response.use(onAxiosResponse, onAxiosResponseError);
+authTestClient.interceptors.response.use(onAxiosResponse, onAxiosResponseError);

@@ -10,6 +10,7 @@ import Loading from "../components/homepageComponents/Loading";
 import LoginSection from "../components/homepageComponents/LoginSection";
 import TagList from "../components/homepageComponents/TagList";
 import { HomapageTitle } from "src/styledComponents";
+import AuthTest from "src/components/authTest";
 
 const HomePage = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -105,6 +106,7 @@ const HomePage = () => {
       />
       <Outlet />
       <TagList tags={tags} tagCount={tagCount} />
+      <AuthTest />
     </div>
   );
 };
