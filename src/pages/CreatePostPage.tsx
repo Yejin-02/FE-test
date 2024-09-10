@@ -109,6 +109,12 @@ function CreatePostPage() {
     }
   };
 
+  const handleRemoveFile = (fileToRemove: File) => {
+    setSelectedFiles((prevFiles) =>
+      prevFiles.filter((file) => file !== fileToRemove),
+    );
+  };
+
   return (
     <div>
       <button onClick={handleCancle}>홈 화면으로 돌아가기</button>
@@ -125,6 +131,7 @@ function CreatePostPage() {
         onBodyChange={(e) => setPostBody(e.target.value)}
         onFileChange={handleFileChange}
         selectedFiles={selectedFiles}
+        onRemoveFile={handleRemoveFile}
       />
       <TagInput
         postTags={postTags}

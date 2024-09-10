@@ -7,6 +7,7 @@ type PostFormProps = {
   onBodyChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selectedFiles: File[];
+  onRemoveFile: (file: File) => void;
 };
 
 const PostForm: React.FC<PostFormProps> = ({
@@ -16,6 +17,7 @@ const PostForm: React.FC<PostFormProps> = ({
   onBodyChange,
   onFileChange,
   selectedFiles,
+  onRemoveFile,
 }) => (
   <div>
     <input
@@ -40,7 +42,7 @@ const PostForm: React.FC<PostFormProps> = ({
           <h4>첨부된 이미지 미리보기:</h4>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
             {selectedFiles.map((file, index) => (
-              <div key={index}>
+              <div key={index} style={{ position: "relative" }}>
                 <img
                   src={URL.createObjectURL(file)}
                   alt={`Preview ${index + 1}`}
@@ -50,6 +52,21 @@ const PostForm: React.FC<PostFormProps> = ({
                     objectFit: "cover",
                   }}
                 />
+                <button
+                  onClick={() => onRemoveFile(file)}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    background: "red",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    cursor: "pointer",
+                  }}
+                >
+                  x
+                </button>
               </div>
             ))}
           </div>
