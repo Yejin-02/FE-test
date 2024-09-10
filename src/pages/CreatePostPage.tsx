@@ -12,7 +12,7 @@ function CreatePostPage() {
   const [selectedBoardID, setSelectedBoardID] = useState("");
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [postTags, setPostTags] = useState<string[]>([]);
   const [inputTag, setInputTag] = useState("");
 
@@ -26,7 +26,7 @@ function CreatePostPage() {
     postBody: string,
     postTags: string[],
     selectedBoardID: string,
-    selectedFile: File | null,
+    selectedFiles: File[],
   ) => {
     const postData = {
       title: postTitle,
@@ -57,9 +57,11 @@ function CreatePostPage() {
 
       // post id 받아와서 이미지 업로드
       const postUuid = response.id;
-      if (postUuid && selectedFile) {
-        await uploadImageToPost(postUuid, selectedFile);
-        console.log("Image uploaded successfully");
+      if (postUuid && selectedFiles.length > 0) {
+        for (const file of selectedFiles) {
+          await uploadImageToPost(postUuid, file);
+        }
+        console.log("Images uploaded successfully");
       }
 
       // 모든 작업 완료되면 게시글로 리디렉션
@@ -76,8 +78,9 @@ function CreatePostPage() {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setSelectedFile(event.target.files[0]);
+    if (event.target.files) {
+      const newFiles = Array.from(event.target.files);
+      setSelectedFiles((prevFiles) => [...prevFiles, ...newFiles]);
     }
   };
 
@@ -121,6 +124,7 @@ function CreatePostPage() {
         onTitleChange={(e) => setPostTitle(e.target.value)}
         onBodyChange={(e) => setPostBody(e.target.value)}
         onFileChange={handleFileChange}
+        selectedFiles={selectedFiles}
       />
       <TagInput
         postTags={postTags}
@@ -136,7 +140,7 @@ function CreatePostPage() {
             postBody,
             postTags,
             selectedBoardID,
-            selectedFile,
+            selectedFiles,
           )
         }
       >

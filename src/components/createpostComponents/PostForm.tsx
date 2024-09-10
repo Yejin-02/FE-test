@@ -6,6 +6,7 @@ type PostFormProps = {
   onTitleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBodyChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedFiles: File[];
 };
 
 const PostForm: React.FC<PostFormProps> = ({
@@ -14,6 +15,7 @@ const PostForm: React.FC<PostFormProps> = ({
   onTitleChange,
   onBodyChange,
   onFileChange,
+  selectedFiles,
 }) => (
   <div>
     <input
@@ -31,7 +33,29 @@ const PostForm: React.FC<PostFormProps> = ({
       style={{ width: "1000px" }}
       required
     />
-    <input type="file" accept="image/*" onChange={onFileChange} />
+    <input type="file" accept="image/*" multiple onChange={onFileChange} />
+    <div>
+      {selectedFiles.length > 0 && (
+        <div style={{ marginTop: "10px" }}>
+          <h4>첨부된 이미지 미리보기:</h4>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+            {selectedFiles.map((file, index) => (
+              <div key={index}>
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={`Preview ${index + 1}`}
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   </div>
 );
 
