@@ -3,6 +3,7 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 
 import { register } from "../api/auth";
+import { PagesWrapper, RedirectHome } from "src/styledComponents";
 
 const RegisterPage = () => {
   const [userNickname, setUserNickname] = useState("");
@@ -30,8 +31,9 @@ const RegisterPage = () => {
   };
 
   return (
-    <div>
-      <h1>Sign Up</h1>
+    <PagesWrapper>
+      <RedirectHome to="/">{"< 홈 화면으로 돌아가기"}</RedirectHome>
+      <h1>Register Page</h1>
       <div>
         <form
           onSubmit={handleRegister}
@@ -77,7 +79,7 @@ const RegisterPage = () => {
           <button type="submit">Sign Up</button>
         </form>
       </div>
-    </div>
+    </PagesWrapper>
   );
 };
 

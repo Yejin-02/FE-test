@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { login } from "../api/auth";
 import { useAuth } from "../contexts/AuthContext.tsx";
+import { PagesWrapper, RedirectHome } from "src/styledComponents.tsx";
 
 const LoginPage = () => {
   const [userEmail, setUserEmail] = useState("");
@@ -34,8 +35,9 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <PagesWrapper>
+      <RedirectHome to="/">{"< 홈 화면으로 돌아가기"}</RedirectHome>
+      <h1>Login Page</h1>
       <div>
         <form onSubmit={handleLogin}>
           <h3>로그인</h3>
@@ -61,7 +63,7 @@ const LoginPage = () => {
       {token ? <p>{token}</p> : <p>없다</p>}
       <h3>refreshToken</h3>
       {refreshToken ? <p>{refreshToken}</p> : <p>없다</p>}
-    </div>
+    </PagesWrapper>
   );
 };
 

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PagesWrapper, RedirectHome } from "src/styledComponents";
 
 const SettingsPage = () => {
   const [userPW, setUserPW] = useState("userPW");
@@ -6,8 +7,9 @@ const SettingsPage = () => {
   const [userPWcheck, setUserPWcheck] = useState("");
 
   return (
-    <div>
-      <h1>Settings</h1>
+    <PagesWrapper>
+      <RedirectHome to="/">{"< 홈 화면으로 돌아가기"}</RedirectHome>
+      <h1>Settings Page</h1>
       <div>
         <form
           onSubmit={() => {
@@ -45,7 +47,7 @@ const SettingsPage = () => {
         </form>
         <button style={{ width: "300px", marginTop: "20px" }}>회원 탈퇴</button>
       </div>
-    </div>
+    </PagesWrapper>
   );
 };
 
